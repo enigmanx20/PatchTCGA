@@ -1,5 +1,5 @@
 # PatchTCGA
-[Large-scale pretraining on pathological images for fine-tuning of small pathological benchmarks](https://arxiv.org/abs/2303.15693)
+Paper: [Large-scale pretraining on pathological images for fine-tuning of small pathological benchmarks](https://arxiv.org/abs/2303.15693)
 
 
 
