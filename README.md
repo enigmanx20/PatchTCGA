@@ -19,6 +19,8 @@ Use the snippet below to make the original archive from divided files.
 ```
 $ cat PTCGA200_p_* > PTCGA200.tar.gz
 ```
+To reproduce the same training, validation, and testing split in the original paper, download and load the 3fold_dict_idx_filenames.pickle file by dataset_utils.py.
+
 
 ## Patch Camelyon in 200μm (PCam200): 
 
