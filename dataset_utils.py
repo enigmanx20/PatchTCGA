@@ -87,8 +87,6 @@ class PTCGA200(Dataset):
                     if self.load_in_mem:
                         self.img_data.append(default_loader( os.path.join(self.root_dir, d, img)))
         
-        print ('Initialization finished!')
-        
     def __len__(self):
         return len(self.data)
 
@@ -164,8 +162,6 @@ class PCam200(Dataset):
                         if self.load_in_mem:
                             self.img_data.append(default_loader( os.path.join(root_dir, mode, nort, case, img)))
         
-        print ('Initialization finished!')
-        
     def __len__(self):
         return len(self.data)
 
@@ -202,8 +198,6 @@ class segPANDA200(Dataset):
                                 if self.load_in_mem:
                                     self.img_data.append(default_loader( self.data[-1]))
                                     self.mask_data.append(default_loader( self.mask[-1]))
-        
-        print ('Initialization finished!')
         
     def __len__(self):
         return len(self.data)
