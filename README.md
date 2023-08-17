@@ -38,6 +38,8 @@ License: CC BY-SA-NC 4.0 [![License: CC BY-NC-SA 4.0](https://img.shields.io/bad
 
 ### Requirements
 - pytorch >=1.8.1 
+- torchvision
+- kornia
 - Pillow 8.2.0
 - numpy 
 - tqdm 3.60.0

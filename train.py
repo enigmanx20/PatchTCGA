@@ -41,7 +41,7 @@ def main_worker(gpu, ngpus_per_node, config):
     print ('GPU ', gpu, 'Rank ', config.rank, "World size ", config.world_size, "dist_url ", config.dist_url)
     dist.init_process_group(backend='nccl', init_method=config.dist_url,
                                 world_size=config.world_size, rank=config.rank) 
-    train_utils.setup_project(config)
+    config = train_utils.setup_project(config)
     writer, txtlogger = train_utils.setup_logger(config)
     print ("Setup logger in {}".format(config.gpu))
     torch.backends.cudnn.benchmark = True
@@ -145,7 +145,7 @@ def main_worker(gpu, ngpus_per_node, config):
                 data = batch[0].to(config.gpu, non_blocking=True)
                 target = batch[1].to(torch.int64).to(config.gpu, non_blocking=True)
             model.train()
-            if config.self_supervised is  None:
+            if config.self_supervised is None:
                 with autocast(enabled=config['enable_autocast']): 
                     if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
                         output = model(data)['out']

@@ -1,5 +1,20 @@
 import sys
-from typing import Any       
+from typing import Any  
+
+class DummyWriter(object):
+    """Tensorboard logger."""
+
+    def __init__(self, log_dir):
+        """Initialize summary writer."""
+        self.log_dir = log_dir
+    def add_scalar(self, tag, value, step):
+        """Add scalar summary."""
+        return None
+    def scalar_summary(self, tag, value, step):
+        """Add scalar summary."""
+        return None
+    def histogram_summary(self, tag, value, step):
+        return None
     
 # from stylegan
 class Logger(object):

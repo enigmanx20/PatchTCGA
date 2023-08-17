@@ -4,7 +4,7 @@ import shutil
 import torch
 import torch.nn as nn
 import timm
-from logger import  Logger
+from logger import  DummyWriter, Logger
 from torch.utils.tensorboard import SummaryWriter
 import dataset_utils
 import torchvision.transforms as transforms
@@ -49,7 +49,7 @@ def setup_project(config):
                 if '.py' in f:
                     shutil.copy(f, os.path.join(project_dir, f))
 
-        return config
+    return config
 
 def setup_config(config):
     if 'PTCGA' in os.path.basename(config["dataset_dir"]):
@@ -78,9 +78,11 @@ def setup_config(config):
     return config
 
 def setup_logger(config):
-    if not config.debug and config.rank==0:
+    if config.rank==0:
         txtlogger = Logger(file_name=os.path.join(config['project_dir'], "log.txt"), file_mode="w", should_flush=True)
-    return SummaryWriter(config['log_dir']), txtlogger
+        return SummaryWriter(config['log_dir']), txtlogger
+    else:
+        return DummyWriter(config['log_dir']), None
 
 def init_model(config):
     if config.self_superversed==None:
