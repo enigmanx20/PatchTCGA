@@ -82,10 +82,10 @@ def setup_logger(config):
         txtlogger = Logger(file_name=os.path.join(config['project_dir'], "log.txt"), file_mode="w", should_flush=True)
         return SummaryWriter(config['log_dir']), txtlogger
     else:
-        return DummyWriter(config['log_dir']), None
+        return DummyWriter(''), None
 
 def init_model(config):
-    if config.self_superversed==None:
+    if config.self_supervised==None:
         if config.model_name in ["resnet18", "resnet50"]:
             model = torch.hub.load('pytorch/vision:v0.6.0', config.model_name, 
                             pretrained=config['pretrained'])
@@ -153,7 +153,7 @@ def init_model(config):
         elif config.model_name =="resnet50":
             encoder_online = byol_torch.ResNet50(initializer='original')
             encoder_target = byol_torch.ResNet50(initializer='original')   
-        if config.self_superversed=='byol':
+        if config.self_supervised=='byol':
             model = byol_torch.BYOL(encoder_online=encoder_online, encoder_target=encoder_target, **config.model_config)
     
     if config['reset_bn']:
@@ -184,7 +184,7 @@ def save_ckpt(config, model, optimizer, scheduler, scaler, epoch, itr, num_updat
 
 def prepare_aug(config):
     if 'PTCGA' in os.path.basename(config["dataset_dir"]):
-        if config['self_superversed'] is not None:
+        if config['self_supervised'] is not None:
             tra = transforms.Compose([ transforms.RandomResizedCrop(config['image_size'], scale=(0.8, 1.), ratio=(0.75, 1.3333333333333333)),
                                 transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.4, 0.1) ], p=0.8), # cf https://arxiv.org/pdf/1703.02442.pdf
                                 transforms.RandomGrayscale(p=0.2),
