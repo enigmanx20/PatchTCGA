@@ -18,19 +18,18 @@ config = {
                         # unbiased_stat = ( [0.5, 0.5, 0.5], [0.5, 0.5, 0.5] )
                         
             "seed"       :       1234,
-            "epochs"     :        100,
+            "epochs"     :          5,
             "checkpoint" :       None,
             "pretrained" :      False,
-            "resume_fold":          0,
             "resume_epoch":         0, 
             "batch_size" :        128,  # batch size per GPU
             "base_batch_size" :   512,  # peak lr = (total_batch_size / base_batch_size) * lr
             "num_accum"  :          1,
             "n_fold"     :          3,
-            "lr"         :       5e-4,  
+            "lr"         :       1e-4,  
          "optim"         :    'adamw',  # optimizer one of adam, adamw, sgd, lars
             "cold_epochs":          0,   
-          "warmup_epochs":         10,  
+          "warmup_epochs":          1,  
          "snapshot_epoch":          1,
             "wd"         :     5.0e-5,  # set 0.0 for fine-tuning
             "clip_norm"  :        1.0,
