@@ -146,7 +146,7 @@ def main_worker(gpu, ngpus_per_node, config):
                 target = batch[1].to(torch.int64).to(config.gpu, non_blocking=True)
             model.train()
             if config.self_supervised is None:
-                with autocast(enabled=config['enable_autocast']): 
+                with autocast(device_type='cuda', enabled=config['enable_autocast']): 
                     if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
                         output = model(data)['out']
                     else:
@@ -156,7 +156,7 @@ def main_worker(gpu, ngpus_per_node, config):
             else:  
                 view1 = data[0][0].to(config.gpu, non_blocking=True)
                 view2 = data[0][1].to(config.gpu, non_blocking=True)
-                with autocast(enabled=config['enable_autocast']): 
+                with autocast(device_type='cuda', enabled=config['enable_autocast']): 
                     online_out, target_out = model.forward(view1, view2)
                     repr_loss = ssl_criterion(online_out['pred_out_1'], target_out['proj_out_2'])
                     repr_loss += ssl_criterion(online_out['pred_out_2'], target_out['proj_out_1'])

@@ -1,6 +1,7 @@
 import os, re
 import time
 import shutil
+import tqdm
 import torch
 import torch.nn as nn
 import timm
@@ -276,7 +277,7 @@ def Accuracy(config, model, criterion, dataloader, mode, num_itr=None):
         model.eval()
         val_in     = batch_v[0].to(config.gpu, non_blocking=True)
         val_target = batch_v[1].to(config.gpu, torch.int64, non_blocking=True)
-        with torch.amp.autocast(enabled=config['enable_autocast']): 
+        with torch.amp.autocast(device_type='cuda', enabled=config['enable_autocast']): 
             output  = model(val_in)       
             if not loss_flag:
                 val_loss = criterion(output, val_target) / float( config["num_accum"] )
@@ -319,7 +320,7 @@ def DiceJaccardAccuracy(model, loader, device, ddp=False, ignor_index=[], num_cl
         img_loaded += len( batch )
         img = batch[0].to(device, non_blocking=True)
         mask = batch[1].to(device, torch.uint8, non_blocking=True)
-        with torch.amp.autocast():
+        with torch.amp.autocast(device_type='cuda'):
             out = model(img)['out']
         pred = out.argmax(1).to(torch.uint8)
         
