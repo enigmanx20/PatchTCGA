@@ -2,7 +2,7 @@ import easydict
 import os
 
 config = {  
-                'memo'   :  'resnet50_PTCGA200_scratch',
+                'memo'   :  'resnet50_PCam200_scratch',
       'model_name'       :  'resnet50', # one of resnet18, resnet50, incv3, eff-b3, vit-s16, vit-b32
       'dropout_p'        :        0.4,
       'reset_bn'         :       True,
@@ -34,7 +34,7 @@ config = {
          "snapshot_epoch":          1,
             "wd"         :     5.0e-5,  # set 0.0 for fine-tuning
             "clip_norm"  :        1.0,
-            "dataset_dir": './datasets/PTCGA200',
+            "dataset_dir": './datasets/PCam200',
             "root_dir"   : './',
             'nnode'      :   1,    # number of nodes
             'hosts'      :   [],   # list of hostnames, 

@@ -36,6 +36,13 @@ License: CC BY-SA-NC 4.0 [![License: CC BY-NC-SA 4.0](https://img.shields.io/bad
 
 # Getting Started
 
+### Requirements
+- pytorch >=1.8.1 
+- Pillow 8.2.0
+- numpy 
+- tqdm 3.60.0
+- h5py
+
 ### Train
 Download datasets and modify the config.py file. Then, run the following command.The training script is designed for distributed training. If you want to train on multiple nodes, provide host name lists in the config.py file and run the script in each node.
 

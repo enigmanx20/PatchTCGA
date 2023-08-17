@@ -53,9 +53,9 @@ def setup_project(config):
 
 def setup_config(config):
     if 'PTCGA' in os.path.basename(config["dataset_dir"]):
-        if os.path.isfile(os.path.join(config.job_dir, '3fold_dict_idx_filenames.pickle')):
+        if os.path.isfile(os.path.join(config.root_dir, '3fold_dict_idx_filenames.pickle')):
             import pickle
-            with open(os.path.join(config.job_dir, '3fold_dict_idx_filenames.pickle'), 'rb') as f:
+            with open(os.path.join(config.root_dir, '3fold_dict_idx_filenames.pickle'), 'rb') as f:
                 fold_dict = pickle.load(f)
         else:
             dataset_t = dataset_utils.PTCGA200(config.dataset_dir, transform=None)
@@ -165,7 +165,7 @@ def init_model(config):
     return model
     
 def save_ckpt(config, model, optimizer, scheduler, scaler, epoch, itr, num_updates):
-    snapshot_path = os.path.join(config.snapshot_dir, f'{config.memo}_{epoch}epochs_{num_updates}.pth.tar'))
+    snapshot_path = os.path.join(config.snapshot_dir, f'{config.memo}_{epoch}epochs_{num_updates}.pth.tar')
     ckpt = {}
     ckpt.update(
 {
