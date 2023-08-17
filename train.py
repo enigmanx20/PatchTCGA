@@ -238,7 +238,8 @@ def main_worker(gpu, ngpus_per_node, config):
         train_utils.save_ckpt(config, model, optimizer, scheduler, scaler, epoch, itr, num_updates)
     print ("Finished !")
     print("Elapsed time: ", str(datetime.timedelta(seconds=time.time() - train_start)) )
-    txtlogger.close()
+    if config.rank==0:
+        txtlogger.close()
         
 # DDP setup
 def main(config):
