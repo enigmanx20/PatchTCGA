@@ -6,7 +6,7 @@ config = {
       'model_name'       :  'resnet50', # one of resnet18, resnet50, incv3, eff-b3, vit-s16, vit-b32
       'dropout_p'        :        0.4,
       'reset_bn'         :       True,
-      'self_superversed' :       None, # one of None, mocov2, byol, simclr, dino. None indicates supervised training  
+      'self_superversed' :       None, # one of None,byol. None indicates supervised training. BYOL only supports resnet50 now.  
       'fine_tune'        :      False, # True for fine-tuning, False for training from scratch
       'enable_autocast'  :       True,
             "image_size" :        224, # 299 for inceptionV3, 300 for efficientnet-b3, 224 for others

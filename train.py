@@ -55,6 +55,8 @@ def main_worker(gpu, ngpus_per_node, config):
     model.to(config.gpu)
     model = DDP(model, device_ids=[config.gpu], output_device=config.gpu)   
     criterion = nn.CrossEntropyLoss()
+    if config.self_supervised == 'byol':
+        ssl_criterion = utils.BYOLLoss(reduction='mean')
     
     tra, tra_val, tra_kornia = train_utils.prepare_aug(config)
     train_sampler, val_sampler, train_sampler_v, dataloader, dataloader_v, dataloader_train_v, dataloader_test = dataset_utils.prepare_dataloaders(config, tra, tra_val)   
@@ -133,15 +135,25 @@ def main_worker(gpu, ngpus_per_node, config):
             else:
                 data = batch[0].to(config.gpu, non_blocking=True)
                 target = batch[1].to(torch.int64).to(config.gpu, non_blocking=True)
-
             model.train()
-            with autocast(enabled=config['enable_autocast']): 
-                if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
-                    output = model(data)['out']
-                else:
-                    output = model(data)
-                loss = criterion(output, target)
-                loss = loss / float( config["num_accum"] )
+            if config.self_supervised is  None:
+                with autocast(enabled=config['enable_autocast']): 
+                    if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
+                        output = model(data)['out']
+                    else:
+                        output = model(data)
+                    loss = criterion(output, target)
+                    loss = loss / float( config["num_accum"] )
+            else:  
+                view1 = data[0][0].to(config.gpu, non_blocking=True)
+                view2 = data[0][1].to(config.gpu, non_blocking=True)
+                with autocast(enabled=config['enable_autocast']): 
+                    online_out, target_out = model.forward(view1, view2)
+                    repr_loss = ssl_criterion(online_out['pred_out_1'], target_out['proj_out_2'])
+                    repr_loss += ssl_criterion(online_out['pred_out_2'], target_out['proj_out_1'])
+                    classif_loss = criterion(online_out['logits'], target)
+                    loss = repr_loss + classif_loss
+                    loss = loss / float( config["num_accum"] )
 
             scaler.scale(loss).backward()
             if (itr+1)%config["num_accum"] == 0:
@@ -153,6 +165,13 @@ def main_worker(gpu, ngpus_per_node, config):
                 scheduler.step()
                 optimizer.zero_grad()
                 num_updates += 1
+                if config.self_supervised is not None:
+                    if config.self_supervised == 'byol':
+                        tau = utils.calc_ema_tau(num_updates, config.base_target_ema, max_step)
+                    model.module.apply_ema(tau)
+                    writer.add_scalar('Misc/tau', tau, num_updates)
+
+
                 if (num_updates)%5==0 and config.rank==0:
                     print (f"Train loss @rank{config.rank}: {loss.item()}")
                     writer.add_scalar('Loss/train', loss.item(), num_updates)

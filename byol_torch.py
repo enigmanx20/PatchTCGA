@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 from __future__ import print_function, division, absolute_import
 import math
 import torch
@@ -13,10 +7,6 @@ import torch.nn.functional as F
 import torchvision
 from collections import OrderedDict
 import copy
-
-
-# In[2]:
-
 
 class MLP(nn.Module):
     def __init__(self, dim, hidden_dim, out_dim, initializer='original'):
@@ -41,6 +31,56 @@ class MLP(nn.Module):
         
     def forward(self, x):
         return self.net(x)
+    
+class ResNet18(torchvision.models.ResNet):
+    def __init__(self, initializer='original'):
+        """
+        ResNet50 encoder
+        """
+        super(ResNet18, self).__init__(block=torchvision.models.resnet.Bottleneck,
+                                       layers=[2, 2, 2, 2],
+                                       num_classes=1,)
+        self.net = nn.Sequential(
+                     OrderedDict(
+                         {
+                             'conv1'  : copy.deepcopy(self.conv1), #self.conv1,
+                             'bn1'    : copy.deepcopy(self.bn1), #self.bn1,
+                             'act'    : copy.deepcopy(self.relu), #self.relu,
+                             'maxpool': copy.deepcopy(self.maxpool), #self.maxpool,
+                             'layer1' : copy.deepcopy(self.layer1), #self.layer1,
+                             'layer2' : copy.deepcopy(self.layer2), #self.layer2,
+                             'layer3' : copy.deepcopy(self.layer3), #self.layer3,
+                             'layer4' : copy.deepcopy(self.layer4), #self.layer4,
+                         }                                     
+                       )
+                    )
+        del self.conv1
+        del self.bn1
+        del self.relu
+        del self.maxpool
+        del self.layer1
+        del self.layer2
+        del self.layer3
+        del self.layer4
+        del self.avgpool
+        del self.fc
+        if initializer == 'original':
+            self._reset_parameters_jax()
+    def _reset_parameters_jax(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                fan_in, _ = init._calculate_fan_in_and_fan_out(m.weight)
+                std = 1. / math.sqrt(fan_in)
+                init._no_grad_trunc_normal_(m.weight, 0.0, std, -1.0, 1.0)
+                if m.bias:
+                    init.zeros_(m.bias)
+            elif isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+        
+    def forward(self, x):
+        out = self.net(x)
+        return out.mean(dim=(2, 3)) # global average pooling
     
 class ResNet50(torchvision.models.ResNet):
     def __init__(self, initializer='original'):
@@ -91,19 +131,13 @@ class ResNet50(torchvision.models.ResNet):
     def forward(self, x):
         out = self.net(x)
         return out.mean(dim=(2, 3)) # global average pooling
-
-        
-
-
-# In[ ]:
-
-
+    
 class BYOL(nn.Module):
     def __init__(self, 
                  encoder_online,
                  encoder_target,
-                 projector_hidden_size = 256,
-                 predictor_hidden_size = 256,
+                 projector_hidden_size = 4096,
+                 predictor_hidden_size = 4096,
                  projector_output_size = 256,
                  num_classes=20,
                  initializer='original', **kwargs):
@@ -191,6 +225,7 @@ class BYOL(nn.Module):
                                     )
 
             return online_out, target_out
+        
 
 
 

@@ -2,6 +2,7 @@ import os
 import random
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
 from collections import OrderedDict
 
@@ -123,6 +124,45 @@ def FCN_CNN_vit(
     aux_classifier = None
     return fcn.FCN(backbone, classifier, aux_classifier)
 
+class ApplyTwoTransforms:
+    """Apply two different transform to one image as the view1 and view2."""
+    def __init__(self, transform_view1, transform_view2):
+        self.transform_view1 = transform_view1
+        self.transform_view2 = transform_view2
+
+    def __call__(self, x):
+        view1 = self.transform_view1(x)
+        view2 = self.transform_view2(x)
+        return [view1, view2]
+
+# from original BYOL
+def _cosine_decay(global_step: int, max_steps: int, initial_value: float) :
+    """Simple implementation of cosine decay from TF1."""
+    global_step = min(global_step, max_steps)
+    cosine_decay_value = 0.5 * (1 + math.cos(math.pi * global_step / max_steps))
+    decayed_learning_rate = initial_value * cosine_decay_value
+    return decayed_learning_rate
+
+def calc_ema_tau(global_step: int, base_ema: float, max_steps: int):
+    decay = _cosine_decay(global_step, max_steps, 1.)
+    return 1. - (1. - base_ema) * decay
+
+class BYOLLoss(nn.Module):
+    def __init__(self, reduction='mean'):
+        super(BYOLLoss, self).__init__()
+        assert reduction in ['none', 'mean', 'sum']
+        self.reduction = reduction
+    def forward(self, input, target):
+        normed_input = F.normalize(input, p=2, dim=1)
+        normed_target = F.normalize(target, p=2, dim=1)
+        
+        loss = 2 - 2 * (normed_input * normed_target).sum(dim=-1)
+        if self.reduction == 'none':
+            return loss
+        elif self.reduction == 'mean':
+            return loss.mean()
+        elif self.reduction == 'sum':
+            return loss.sum()
 
 #from Big-GAN
 # Utility file to seed rngs
@@ -165,22 +205,16 @@ class GradualWarmupWithCosineLR(optim.lr_scheduler._LRScheduler):
     def state_dict(self):
         warnings.warn(SAVE_STATE_WARNING, UserWarning)
         state_dict = {key: value for key, value in self.__dict__.items() if key not in ('optimizer')}
-
         return state_dict
-
 
     def load_state_dict(self, state_dict):
         warnings.warn(SAVE_STATE_WARNING, UserWarning)
         lr_lambdas = state_dict.pop('lr_lambdas')
         self.__dict__.update(state_dict)
-        # Restore state_dict keys in order to prevent side effects
-        # https://github.com/pytorch/pytorch/issues/32756
         state_dict['lr_lambdas'] = lr_lambdas
-
         for idx, fn in enumerate(lr_lambdas):
             if fn is not None:
                 self.lr_lambdas[idx].__dict__.update(fn)
-
 
     def get_lr(self):
         if not self._get_lr_called_within_step:
@@ -194,7 +228,7 @@ class GradualWarmupWithCosineLR(optim.lr_scheduler._LRScheduler):
             return [self.initial_lr + (self._step_count-self.cold_step)/ float(self.peak_step-self.cold_step) * (base_lr - self.initial_lr) 
                     for base_lr in self.base_lrs]
         else:
-            return [self.initial_lr + (base_lr - self.initial_lr) * (1 + math.cos(math.pi * self._step_count/self.max_step)) / 2
+            return [base_lr * (1 + math.cos(math.pi * (self._step_count - self.peak_step)/(self.max_step - self.peak_step))) / 2 + 1e-6
                 for base_lr in self.base_lrs]
 
 # from simCLR repo
