@@ -23,8 +23,8 @@ config = {
             "pretrained" :      False,
             "resume_fold":          0,
             "resume_epoch":         0, 
-            "batch_size" :        128,  # 64 is ok for FP32  128 ok for mp @resnet50,   128 for inceptionV3 wAC, 64 for efficientnet
-            "base_batch_size" :   512,
+            "batch_size" :        128,  # batch size per GPU
+            "base_batch_size" :   512,  # peak lr = (total_batch_size / base_batch_size) * lr
             "num_accum"  :          1,
             "n_fold"     :          3,
             "lr"         :       5e-4,  
@@ -36,7 +36,8 @@ config = {
             "clip_norm"  :        1.0,
             "dataset_dir": './datasets/PTCGA200',
             "root_dir"   : './',
-            'nnode'      :   8,    # number of nodes
+            'nnode'      :   1,    # number of nodes
+            'hosts'      :   [],   # list of hostnames, 
             'dist_url'   :   'tcp://127.0.0.1:52111', # master node:ephemeral_port 
 }
 

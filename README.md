@@ -37,12 +37,15 @@ License: CC BY-SA-NC 4.0 [![License: CC BY-NC-SA 4.0](https://img.shields.io/bad
 # Getting Started
 
 ### Train
-Download datasets and modify the config.py file. Then, run the following command.
+Download datasets and modify the config.py file. Then, run the following command.The training script is designed for distributed training. If you want to train on multiple nodes, provide host name lists in the config.py file and run the script in each node.
 
 ```
 python train.py
 ```
-To train BYOL, change the config ```self_superversed' :    'byol'```.
+To train BYOL, change the config ` 'self_superversed' :    'byol' `. and add the line below in the header of train.py.
+```
+import byol_config.byol_config as ssl_config
+```
 Self-supervised learning was performed using the repo  below except for BYOL.
 - [SimCLR (pytorch repro)](https://github.com/AndrewAtanov/simclr-pytorch)
 - [MoCov2](https://github.com/facebookresearch/moco)

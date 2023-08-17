@@ -21,6 +21,9 @@ import utils
 from config import config
 
 def main_worker(gpu, ngpus_per_node, config):
+    if config['self_supervised'] is None:
+        ssl_config = {}
+    config.update(**ssl_config)
     train_start = time.time()
     batch_size = config["batch_size"]
     epochs     = config["epochs"]
@@ -28,7 +31,13 @@ def main_worker(gpu, ngpus_per_node, config):
     dataset_dir = config["dataset_dir"]
     utils.seed_rng(config.seed)
     config.gpu = gpu
-    config.rank = ngpus_per_node*config.hosts.index(socket.gethostname()) + gpu
+    if config['nnode']==1:
+        config['hosts'] = [socket.gethostname()]
+    assert len(config['hosts']) == config['nnode']
+    if config.nnode == 1:
+        config.rank = gpu
+    else:
+        config.rank = ngpus_per_node*config.hosts.index(socket.gethostname()) + gpu
     print ('GPU ', gpu, 'Rank ', config.rank, "World size ", config.world_size, "dist_url ", config.dist_url)
     dist.init_process_group(backend='nccl', init_method=config.dist_url,
                                 world_size=config.world_size, rank=config.rank) 
