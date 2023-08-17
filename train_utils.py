@@ -241,7 +241,7 @@ def prepare_aug(config):
                                         transforms.Resize(config['val_image_size']),
                                         transforms.ToTensor(),
                                         transforms.Normalize(*config.image_stats)  ])
-         tra_kornia = None
+        tra_kornia = None
 
     elif 'PCam' in  os.path.basename(config["dataset_dir"]):
         tra = transforms.Compose([ transforms.RandomResizedCrop(config['image_size'], scale=(0.8, 1.), ratio=(0.75, 1.3333333333333333)),

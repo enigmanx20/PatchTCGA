@@ -84,16 +84,16 @@ def main_worker(gpu, ngpus_per_node, config):
             no_wd_params.append(param)
         else:
             wd_params.append(param)
-    if config.optin == 'sgd':
+    if config.optim == 'sgd':
         optimizer = optim.SGD([{'params': no_wd_params, 'weight_decay': 0.0}, {'params': wd_params}], lr=lr, 
                                 momentum=0.9, eps=1e-08, weight_decay=config["wd"])
-    elif config.optin == 'adamw':
+    elif config.optim == 'adamw':
         optimizer = optim.AdamW([{'params': no_wd_params, 'weight_decay': 0.0}, {'params': wd_params}], lr=lr, 
                                 betas=(0.9, 0.999), eps=1e-08, weight_decay=config["wd"])
-    elif config.optin == 'adam':
+    elif config.optim == 'adam':
         optimizer = optim.Adam([{'params': no_wd_params, 'weight_decay': 0.0}, {'params': wd_params}], lr=lr, 
                                 betas=(0.9, 0.999), eps=1e-08, weight_decay=config["wd"])
-    elif config.optin == 'lars':
+    elif config.optim == 'lars':
         optimizer = optim.SGD([{'params': no_wd_params, 'weight_decay': 0.0, 'layer_adaptation': False},
                            {'params': wd_params, 'layer_adaptation': True}], lr=lr, momentum=0.9, weight_decay=config["wd"])
         optimizer = utils.LARS(optimizer, 0.001)
