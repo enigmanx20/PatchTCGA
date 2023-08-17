@@ -46,7 +46,7 @@ License: CC BY-SA-NC 4.0 [![License: CC BY-NC-SA 4.0](https://img.shields.io/bad
 - h5py
 
 ### Train
-Download datasets and modify the config.py file. Then, run the following command.The training script is designed for distributed training. If you want to train on multiple nodes, provide host name lists in the config.py file and run the script in each node.
+Download datasets and modify the config.py file. Then, create `runs` folder and run the following command.The training script is designed for distributed training. If you want to train on multiple nodes, provide host name lists in the config.py file and run the script in each node.
 
 ```
 python train.py

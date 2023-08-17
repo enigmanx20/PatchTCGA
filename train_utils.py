@@ -35,7 +35,7 @@ def setup_project(config):
     if config.rank==0:
         timestamp = time.strftime("%b%d%Y_%H%M%SUTC", time.gmtime())
         config['timestamp'] = timestamp
-        project_dir = create_project_dir('./runs', config.memo, timestamp)   
+        project_dir = create_project_dir('./runs', str(config.memo) + str(timestamp))   
         log_dir = os.path.join(project_dir, 'tf_log')
         os.makedirs(log_dir, exist_ok=True)
         snapshot_dir = os.path.join(project_dir, 'snapshot')
