@@ -266,8 +266,8 @@ def prepare_aug(config):
 
 @torch.no_grad()
 def Accuracy(config, model, criterion, dataloader, mode, num_itr=None):
-    if num_epochs is None:
-        num_epochs = len(dataloader)
+    if num_itr is None:
+        num_itr = len(dataloader)
     correct = torch.tensor([0]).to(config.gpu)
     total = torch.tensor([0]).to(config.gpu)
     val_loss = torch.tensor([0.0])
@@ -284,7 +284,7 @@ def Accuracy(config, model, criterion, dataloader, mode, num_itr=None):
         total += val_target.size(0)
         _, predicted = torch.max(output, 1)
         correct += (predicted == val_target).sum().item()
-        if j > num_epochs:
+        if j > num_itr:
             break
     torch.distributed.all_reduce(total) 
     torch.distributed.all_reduce(correct) 
