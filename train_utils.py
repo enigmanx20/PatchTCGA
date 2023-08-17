@@ -204,7 +204,7 @@ def prepare_aug(config):
                                 transforms.Normalize(*config.image_stats)  ])
 
         tra_val = transforms.Compose([  transforms.CenterCrop(287),                # equivalent to 20x (0.5mpp)
-                                        transforms.Resize(config['vaal_image_size']),
+                                        transforms.Resize(config['val_image_size']),
                                         transforms.ToTensor(),
                                         transforms.Normalize(*config.image_stats)  ])
 
@@ -237,7 +237,7 @@ def prepare_aug(config):
                                    transforms.Normalize(*config.image_stats)  ])
 
         tra_val = transforms.Compose([  transforms.CenterCrop(287),                # equivalent to 20x (0.5mpp)
-                                        transforms.Resize(config['vaal_image_size']),
+                                        transforms.Resize(config['val_image_size']),
                                         transforms.ToTensor(),
                                         transforms.Normalize(*config.image_stats)  ])
 
@@ -252,7 +252,7 @@ def prepare_aug(config):
                                    transforms.Normalize(*config.image_stats)  ])
 
         tra_val = transforms.Compose([     #transforms.CenterCrop(287),                # equivalent to 20x (0.5mpp)
-                                        transforms.Resize(config['vaal_image_size']),
+                                        transforms.Resize(config['val_image_size']),
                                         transforms.ToTensor(),
                                         transforms.Normalize(*config.image_stats)  ])
         tra_kornia = None
