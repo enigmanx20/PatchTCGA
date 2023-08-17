@@ -1,7 +1,7 @@
 # coding: utf-8
 from __future__ import print_function, division, absolute_import
 import os
-import datetime.timedelta as timedelta
+import datetime
 import socket
 import time
 import torch
@@ -50,7 +50,7 @@ def main_worker(gpu, ngpus_per_node, config):
         resume_epoch = ckpt['epoch']
     else:
         resume_epoch = 0
-    print("Train preprocessing time: ", str(timedelta(seconds=time.time() - train_start)) )    
+    print("Train preprocessing time: ", str(datetime.timedelta(seconds=time.time() - train_start)) )    
 
     model = train_utils.init_model(config)
     utils.print_num_parameters(model)
@@ -201,13 +201,13 @@ def main_worker(gpu, ngpus_per_node, config):
                 val_acc = train_utils.Accuracy(config, model, criterion, dataloader_v, 'Val', len(dataloader_v) )
                 writer.add_scalar('Misc/val_acc', 100.0 * val_acc.item(), num_updates)
         if config.rank==0:            
-            print("{}th epoch time: ".format(epoch), str(timedelta(seconds=time.time() - epoch_start)) )
-            print("Elapsed time: ", str(timedelta(seconds=time.time() - train_start)) )
+            print("{}th epoch time: ".format(epoch), str(datetime.timedelta(seconds=time.time() - epoch_start)) )
+            print("Elapsed time: ", str(datetime.timedelta(seconds=time.time() - train_start)) )
         if (epoch)%config['snapshot_epoch']==0 and config.rank==0:
             train_utils.save_ckpt(config, model, optimizer, scheduler, scaler, epoch, itr, num_updates)
         writer.add_scalar('Misc/num_epochs', float(epoch), num_updates)
     # testing and epilogue 
-    print("Elapsed time: ", str(timedelta(seconds=time.time() - train_start)) )
+    print("Elapsed time: ", str(datetime.timedelta(seconds=time.time() - train_start)) )
     if 'segPANDA' in os.path.basename(config["dataset_dir"]):
         if config.rank==0:
             results = train_utils.DiceJaccardAccuracy(model, dataloader_test, config.gpu, ddp=False, num_img=None)
@@ -222,7 +222,7 @@ def main_worker(gpu, ngpus_per_node, config):
     if config.rank==0:
         train_utils.save_ckpt(config, model, optimizer, scheduler, scaler, epoch, itr, num_updates)
     print ("Finished !")
-    print("Elapsed time: ", str(timedelta(seconds=time.time() - train_start)) )
+    print("Elapsed time: ", str(datetime.timedelta(seconds=time.time() - train_start)) )
     txtlogger.close()
         
 # DDP setup
