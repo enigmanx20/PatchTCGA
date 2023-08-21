@@ -198,12 +198,16 @@ def main_worker(gpu, ngpus_per_node, config):
                 results = train_utils.DiceJaccardAccuracy(model, dataloader_v, writer, config.gpu, ddp=True) 
                 for tag, value in zip(['mIoU_micro', 'mDice_micro', 'mIoU_macro', 'mDice_macro', 'mPA'], results):
                     writer.add_scalar(f'Misc/val_{tag}', value, num_updates)
-            elif 'PCam' in os.path.basename(config["dataset_dir"]) and (num_updates)%200==0:
+            elif 'PCam200' in os.path.basename(config["dataset_dir"]) and (num_updates)%200==0:
                 val_acc = train_utils.Accuracy(config, model, criterion, dataloader_v, 'Val', len(dataloader_v) )
                 writer.add_scalar('Misc/val_acc', 100.0 * val_acc.item(), num_updates)
 
                 train_v_acc = train_utils.Accuracy(config, model, criterion, dataloader_train_v, 'Train', len(dataloader_v) )
                 writer.add_scalar('Misc/train_acc', 100.0 * train_v_acc.item(), num_updates)
+
+            elif 'PCam' in os.path.basename(config["dataset_dir"]) and (num_updates)%200==0:
+                val_acc = train_utils.Accuracy(config, model, criterion, dataloader_v, 'Val', len(dataloader_v) )
+                writer.add_scalar('Misc/val_acc', 100.0 * val_acc.item(), num_updates)
 
             if num_updates > config["stop_num_updates"]:
                 break
