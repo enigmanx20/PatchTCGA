@@ -191,7 +191,7 @@ class segPANDA200(Dataset):
                     for img in imgs:
                         if img[img.find('.'): ] in ext:
                             if 'mask' in img:
-                                continue'num_class'
+                                continue
                             else:
                                 self.data.append( os.path.join(root_dir, mode, grade, case, img) )
                                 self.mask.append( os.path.join(root_dir, mode, grade, case,  img[:img.find('.')]+'_mask.png') )
