@@ -121,7 +121,7 @@ def main_worker(gpu, ngpus_per_node, config):
         if config.rank==0:
             print (f' {num_updates}th updates, {epoch}/{epochs} epoch')
         if 'segPANDA' in os.path.basename(config["dataset_dir"]) and (num_updates)%200==0:
-            results = train_utils.DiceJaccardAccuracy(model, dataloader_v, writer, config.gpu, ddp=True) 
+            results = train_utils.DiceJaccardAccuracy(model, dataloader_v, config.gpu, ddp=True) 
             for tag, value in zip(['mIoU_micro', 'mDice_micro', 'mIoU_macro', 'mDice_macro', 'mPA'], results):
                 writer.add_scalar(f'Misc/val_{tag}', value, num_updates)
         elif 'PCam' in os.path.basename(config["dataset_dir"]) and (num_updates)%200==0:
@@ -195,7 +195,7 @@ def main_worker(gpu, ngpus_per_node, config):
                     print('lr: ', param_group['lr'])
                     writer.add_scalar('Misc/lr', param_group['lr'], num_updates)
             if 'segPANDA' in os.path.basename(config["dataset_dir"]) and (num_updates)%200==0:
-                results = train_utils.DiceJaccardAccuracy(model, dataloader_v, writer, config.gpu, ddp=True) 
+                results = train_utils.DiceJaccardAccuracy(model, dataloader_v, config.gpu, ddp=True) 
                 for tag, value in zip(['mIoU_micro', 'mDice_micro', 'mIoU_macro', 'mDice_macro', 'mPA'], results):
                     writer.add_scalar(f'Misc/val_{tag}', value, num_updates)
             elif 'PCam200' in os.path.basename(config["dataset_dir"]) and (num_updates)%200==0:
@@ -217,9 +217,9 @@ def main_worker(gpu, ngpus_per_node, config):
             print("Elapsed time: ", str(datetime.timedelta(seconds=time.time() - train_start)) )
 
         if 'segPANDA' in os.path.basename(config["dataset_dir"]):
-                results = train_utils.DiceJaccardAccuracy(model, dataloader_v, writer, config.gpu, ddp=True) 
-                for tag, value in zip(['mIoU_micro', 'mDice_micro', 'mIoU_macro', 'mDice_macro', 'mPA'], results):
-                    writer.add_scalar(f'Misc/val_{tag}', value, num_updates)
+            results = train_utils.DiceJaccardAccuracy(model, dataloader_v, config.gpu, ddp=True) 
+            for tag, value in zip(['mIoU_micro', 'mDice_micro', 'mIoU_macro', 'mDice_macro', 'mPA'], results):
+                writer.add_scalar(f'Misc/val_{tag}', value, num_updates)
         else:
             val_acc = train_utils.Accuracy(config, model, criterion, dataloader_v, 'Val', len(dataloader_v) )
             writer.add_scalar('Misc/val_acc', 100.0 * val_acc.item(), num_updates)
