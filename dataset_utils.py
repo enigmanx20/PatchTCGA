@@ -258,8 +258,8 @@ def prepare_dataloaders(config, tra, tra_val):
     else:
         raise(NotImplementedError)
     
-    dataloader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=(train_sampler is None), pin_memory=True, sampler=train_sampler, num_workers=4, drop_last=True) 
-    dataloader_v = DataLoader(val_dataset, batch_size=config.batch_size*2, shuffle=(val_sampler is None), pin_memory=True, sampler=val_sampler, num_workers=4)
-    dataloader_train_v = DataLoader(train_dataset, batch_size=config.batch_size*2, shuffle=(train_sampler_v is None), sampler=train_sampler_v, pin_memory=True, num_workers=4)
-    dataloader_test = DataLoader(test_dataset, batch_size=config.batch_size*2, shuffle=(test_sampler is None), pin_memory=True, sampler=test_sampler, num_workers=4)
+    dataloader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=(train_sampler is None), pin_memory=True, sampler=train_sampler, num_workers=-1, drop_last=True) 
+    dataloader_v = DataLoader(val_dataset, batch_size=config.batch_size*2, shuffle=(val_sampler is None), pin_memory=True, sampler=val_sampler, num_workers=-1)
+    dataloader_train_v = DataLoader(train_dataset, batch_size=config.batch_size*2, shuffle=(train_sampler_v is None), sampler=train_sampler_v, pin_memory=True, num_workers=-1)
+    dataloader_test = DataLoader(test_dataset, batch_size=config.batch_size*2, shuffle=(test_sampler is None), pin_memory=True, sampler=test_sampler, num_workers=-1)
     return train_sampler, val_sampler, train_sampler_v, dataloader, dataloader_v, dataloader_train_v, dataloader_test

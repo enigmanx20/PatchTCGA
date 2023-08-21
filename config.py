@@ -13,14 +13,15 @@ config = {
          'val_image_size':        224,
         "image_stats"    : ( [0.485, 0.456, 0.406], [0.229, 0.224, 0.225] ),
                         
-                        # imagenet_stat = ( [0.485, 0.456, 0.406], [0.229, 0.224, 0.225] )
-                        # PTCGA_stat = ( [0.7184, 0.5076, 0.6476], [0.0380, 0.0527, 0.0352] )
-                        # unbiased_stat = ( [0.5, 0.5, 0.5], [0.5, 0.5, 0.5] )
+                        # imagenet_stats = ( [0.485, 0.456, 0.406], [0.229, 0.224, 0.225] )
+                        # PTCGA_stats = ( [0.7184, 0.5076, 0.6476], [0.0380, 0.0527, 0.0352] )
+                        # unbiased_stats = ( [0.5, 0.5, 0.5], [0.5, 0.5, 0.5] )
                         
             "seed"       :       1234,
             "epochs"     :          5,
+    "stop_num_updates"   :       1000,
             "checkpoint" :       None,
-            "pretrained" :      False,
+            "pretrained" :      True,
             "resume_epoch":         0, 
             "batch_size" :        128,  # batch size per GPU
             "base_batch_size" :   512,  # peak lr = (total_batch_size / base_batch_size) * lr

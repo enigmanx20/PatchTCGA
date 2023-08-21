@@ -204,6 +204,10 @@ def main_worker(gpu, ngpus_per_node, config):
 
                 train_v_acc = train_utils.Accuracy(config, model, criterion, dataloader_train_v, 'Train', len(dataloader_v) )
                 writer.add_scalar('Misc/train_acc', 100.0 * train_v_acc.item(), num_updates)
+
+            if num_updates > config["stop_num_updates"]:
+                break
+        
         if config.rank==0:            
             print("{}th epoch time: ".format(epoch), str(datetime.timedelta(seconds=time.time() - epoch_start)) )
             print("Elapsed time: ", str(datetime.timedelta(seconds=time.time() - train_start)) )
@@ -221,6 +225,9 @@ def main_worker(gpu, ngpus_per_node, config):
         if (epoch)%config['snapshot_epoch']==0 and config.rank==0:
             train_utils.save_ckpt(config, model, optimizer, scheduler, scaler, epoch, itr, num_updates)
         writer.add_scalar('Misc/num_epochs', float(epoch), num_updates)
+
+        if num_updates > config["stop_num_updates"]:
+            break
     # testing and epilogue 
     print("Elapsed time: ", str(datetime.timedelta(seconds=time.time() - train_start)) )
     if 'segPANDA' in os.path.basename(config["dataset_dir"]):
@@ -228,7 +235,7 @@ def main_worker(gpu, ngpus_per_node, config):
             results = train_utils.DiceJaccardAccuracy(model, dataloader_test, config.gpu, ddp=False, num_img=None)
             for tag, value in zip(['mIoU_micro', 'mDice_micro', 'mIoU_macro', 'mDice_macro', 'mPA'], results):
                 writer.add_scalar(f'Misc/test_{tag}', value, num_updates)
-            print( results)
+            print( 'mIoU_micro: {}, mDice_micro: {}, mIoU_macro: {}, mDice_macro: {}, mPA: {}'.format(*results))
     else :
         test_acc = train_utils.Accuracy(config, model, criterion, dataloader_test, 'Test')
         if config.rank==0:
