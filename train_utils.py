@@ -102,13 +102,13 @@ def init_model(config):
                     else:
                         param.requires_grad = False
             if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
-                model = utils.FCN_CNN_resnet(model, config['num_class'])
+                model = utils.FCN_CNN_resnet(model, config['num_classes'])
         
         elif config.model_name == "incv3":
             model = torch.hub.load('pytorch/vision:v0.6.0', 'inception_v3', 
                             pretrained=config['pretrained'])
-            model.AuxLogits.fc = nn.Linear(model.AuxLogits.fc.in_features, config['num_class'], bias=True)
-            model.fc = nn.Linear(model.fc.in_features, config['num_class'], bias=True)
+            model.AuxLogits.fc = nn.Linear(model.AuxLogits.fc.in_features, config['num_classes'], bias=True)
+            model.fc = nn.Linear(model.fc.in_features, config['num_classes'], bias=True)
             model.dropout.p = config.dropout_p
             if config['fine_tune']:
                 for name, param in model.named_parameters():
@@ -119,13 +119,13 @@ def init_model(config):
                     else:
                         param.requires_grad = False
             if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
-                model = utils.FCN_CNN_incv3(model, config['num_class'])
+                model = utils.FCN_CNN_incv3(model, config['num_classes'])
         
         elif config.model_name == "eff-b3":
             # Caveat: the original study used https://github.com/lukemelas/EfficientNet-PyTorch
             model = torchvision.models.efficientnet_b3(pretrained=config['pretrained'])
             model.classifier[0].p = config.dropout_p
-            model.classifier[1] = nn.Linear(model.classifier.fc.in_features, config['num_class'], bias=True)
+            model.classifier[1] = nn.Linear(model.classifier.fc.in_features, config['num_classes'], bias=True)
             if config['fine_tune']:
                 for name, param in model.named_parameters():
                     if 'classifier' in name:
@@ -133,20 +133,20 @@ def init_model(config):
                     else:
                         param.requires_grad = False
             if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
-                model = utils.FCN_CNN_eff(model, config['num_class'])
+                model = utils.FCN_CNN_eff(model, config['num_classes'])
         
         elif 'vit' in config.model_name:
             if config.model_name == "vit-s16":
                 patch_size = 16 
-                model = timm.create_model('vit_small_patch16_224_in21k', num_classes=config['num_class'])
+                model = timm.create_model('vit_small_patch16_224_in21k', num_classes=config['num_classes'])
             elif config.model_name == "vit-b32":
                 patch_size = 32
-                model = timm.create_model('vit_base_patch32_224_in21k', num_classes=config['num_class'])
+                model = timm.create_model('vit_base_patch32_224_in21k', num_classes=config['num_classes'])
             pos_embed_target = torch.zeros(1, 1+int(config.image_size/patch_size)**2, model.num_features)
             model.pos_embed = nn.Parameter( timm.models.vision_transformer.resize_pos_embed(model.pos_embed, pos_embed_target) )
             model.patch_embed.img_size = (config.image_size, config.image_size)
             if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
-                model = utils.FCN_CNN_vit(model, config['num_class'])
+                model = utils.FCN_CNN_vit(model, config['num_classes'])
     else:
         if config.model_name =="resnet18":
             encoder_online = byol_torch.ResNet18(initializer='original')
