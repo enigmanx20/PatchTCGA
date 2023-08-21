@@ -191,7 +191,7 @@ class segPANDA200(Dataset):
                     for img in imgs:
                         if img[img.find('.'): ] in ext:
                             if 'mask' in img:
-                                continue
+                                continue'num_class'
                             else:
                                 self.data.append( os.path.join(root_dir, mode, grade, case, img) )
                                 self.mask.append( os.path.join(root_dir, mode, grade, case,  img[:img.find('.')]+'_mask.png') )
@@ -235,6 +235,7 @@ def prepare_dataloaders(config, tra, tra_val):
         test_dataset    = segPANDA200(config.dataset_dir, mode='test', transform=tra_val)
         train_sampler   = torch.utils.data.distributed.DistributedSampler(train_dataset)
         val_sampler     = torch.utils.data.distributed.DistributedSampler(val_dataset)
+        train_sampler_v = torch.utils.data.distributed.DistributedSampler(train_dataset)
         test_sampler     = torch.utils.data.SequentialSampler(test_dataset)
 
     elif 'PCam200' in  os.path.basename(config["dataset_dir"]):
