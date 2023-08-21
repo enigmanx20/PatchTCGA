@@ -21,7 +21,7 @@ config = {
             "epochs"     :          5,
     "stop_num_updates"   :       1000,
             "checkpoint" :       None,
-            "pretrained" :      True,
+            "pretrained" :      False,
             "resume_epoch":         0, 
             "batch_size" :        128,  # batch size per GPU
             "num_workers":          1,  # num_workers parameter of DataLoader
