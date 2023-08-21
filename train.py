@@ -131,7 +131,7 @@ def main_worker(gpu, ngpus_per_node, config):
         pbar = tqdm(dataloader)
         for batch in pbar:
             itr += 1
-            if tra_kornia is not None:
+            if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
                 data = batch[0].to(config.gpu, non_blocking=True)
                 target = batch[1].to(torch.float32).to(config.gpu, non_blocking=True)
 

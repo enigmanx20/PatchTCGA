@@ -24,7 +24,7 @@ config = {
             "pretrained" :      True,
             "resume_epoch":         0, 
             "batch_size" :        128,  # batch size per GPU
-            "num_workers":          0,  # num_workers parameter of DataLoader
+            "num_workers":          1,  # num_workers parameter of DataLoader
             "base_batch_size" :   512,  # peak lr = (total_batch_size / base_batch_size) * lr
             "num_accum"  :          1,
             "n_fold"     :          3,
