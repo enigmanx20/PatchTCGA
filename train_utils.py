@@ -317,7 +317,7 @@ def DiceJaccardAccuracy(model, loader, device, ddp=False, ignor_index=[], num_cl
         FPs = [0] * num_classes
         FNs = [0] * num_classes
     img_loaded = 0
-    for i, batch in enumerate(iter(loader)):
+    for i, batch in enumerate(loader):
         img_loaded += len( batch )
         img = batch[0].to(device, non_blocking=True)
         mask = batch[1].to(device, torch.uint8, non_blocking=True)
