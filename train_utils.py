@@ -164,7 +164,7 @@ def init_model(config):
             encoder_online = byol_torch.ResNet50(initializer='original')
             encoder_target = byol_torch.ResNet50(initializer='original')   
         if config.self_supervised=='byol':
-            model = byol_torch.BYOL(encoder_online=encoder_online, encoder_target=encoder_target, **config.model_config)
+            model = byol_torch.BYOL(encoder_online=encoder_online, encoder_target=encoder_target)
     
     if config['reset_bn']:
         for n, m in model.named_modules():
