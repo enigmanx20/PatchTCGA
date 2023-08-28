@@ -53,7 +53,7 @@ python train.py
 ```
 To train BYOL, change the config ` 'self_superversed' :    'byol' `. and comment out the line below in the header of train.py.
 ```
-import byol_config.byol_config as ssl_config
+from byol_config import byol_config as ssl_config
 ```
 Self-supervised learning was performed using the repo  below except for BYOL.
 - [SimCLR (pytorch repro)](https://github.com/AndrewAtanov/simclr-pytorch)

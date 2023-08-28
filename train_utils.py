@@ -13,6 +13,7 @@ import torchvision.transforms as transforms
 import kornia
 import utils
 import byol_torch
+#from byol_config import byol_config as ssl_config
 
 def get_next_run_id(results_dir):
     idx = []
@@ -54,6 +55,10 @@ def setup_project(config):
     return config
 
 def setup_config(config):
+    if config['self_supervised'] is None:
+        ssl_config = {}
+    config.update(**ssl_config)
+
     if 'PTCGA' in os.path.basename(config["dataset_dir"]):
         if os.path.isfile(os.path.join(config.root_dir, '3fold_dict_idx_filenames.pickle')):
             import pickle
