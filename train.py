@@ -19,6 +19,7 @@ import train_utils
 import dataset_utils
 import utils
 from config import config
+#import byol_config.byol_config as ssl_config
 
 def main_worker(gpu, ngpus_per_node, config):
     if config['self_supervised'] is None:

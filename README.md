@@ -51,7 +51,7 @@ Download datasets and modify the config.py file. Then, create `runs` folder and 
 ```
 python train.py
 ```
-To train BYOL, change the config ` 'self_superversed' :    'byol' `. and add the line below in the header of train.py.
+To train BYOL, change the config ` 'self_superversed' :    'byol' `. and comment out the line below in the header of train.py.
 ```
 import byol_config.byol_config as ssl_config
 ```
