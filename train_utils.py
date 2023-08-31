@@ -203,6 +203,8 @@ def prepare_aug(config):
                                 transforms.RandomVerticalFlip(p=0.5), 
                                 transforms.ToTensor(),
                                 transforms.Normalize(*config.image_stats)  ])
+
+            tra = utils.ApplyTwoTransforms(tra, tra)
         else:
             tra = transforms.Compose([ transforms.RandomResizedCrop(config['image_size'], scale=(0.8, 1.), ratio=(0.75, 1.3333333333333333)),
                                 transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.4, 0.1) ], p=0.8), # cf https://arxiv.org/pdf/1703.02442.pdf

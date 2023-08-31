@@ -140,10 +140,11 @@ def main_worker(gpu, ngpus_per_node, config):
                     target = aug(target, params=aug._params)
                 target = target[:, 0, :, :].to(torch.int64)
             else:
-                data = batch[0].to(config.gpu, non_blocking=True)
+                data = batch[0]
                 target = batch[1].to(torch.int64).to(config.gpu, non_blocking=True)
             model.train()
             if config.self_supervised is None:
+                data = data.to(config.gpu, non_blocking=True)
                 with autocast(enabled=config['enable_autocast']): 
                     if 'segPANDA' in  os.path.basename(config["dataset_dir"]):
                         output = model(data)['out']
