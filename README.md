@@ -59,8 +59,16 @@ Self-supervised learning was performed using the repo  below except for BYOL.
 - [DINO](https://github.com/facebookresearch/dino)
 
 # Pretrained Models
+Pretrained models on PTCGA200.
+- [SimCLRv1.5](https://drive.google.com/file/d/1tC_QwWTqWO9I0hzUArAc8yWimJsY33hK/view?usp=drive_link): ResNet50 model checkpoint trained on PTCGA200 for 40 epochs with SimCLR.
+- [MoCov2](https://drive.google.com/file/d/1YOc0t0rd5aJriZPyiUGovFQbTVJZPel8/view?usp=drive_link): ResNet50 model checkpoint trained on PTCGA200 for 40 epochs with MoCov2.
+- [BYOL](https://drive.google.com/file/d/15OEY995X2yRdlhKTYYlP5WQNZKLIwl-J/view?usp=drive_link): ResNet50 model checkpoint trained on PTCGA200 for 40 epochs with BYOL.
+- [DINOv1](https://drive.google.com/file/d/15RbQ0QURpr_3g-x0-FG7kA8oeu6nocSr/view?usp=drive_link): ViT-S/16 model checkpoint trained on PTCGA200 for 40 epochs with DINOv1.
+- [MAE](https://drive.google.com/file/d/1T13zEkzQbcSyzEbJN0OOhCZqlAEqb-yR/view?usp=drive_link): ViT-L/16 model checkpoint trained on PTCGA200 for 40 epochs with masked autoencoder (MAE).
 
-Under permission process.
+Trained models on SegPANDA200.
+- [DeepLabv3](https://drive.google.com/file/d/1bkeTG05OaU_uTfGddsJxRcVZbLy-mbCs/view?usp=drive_link): DeepLabv3 model checkpoint trained on SegPANDA200 (Test mIoU 69.61).
+- [MAE-ViT-L/16](https://drive.google.com/file/d/1DWpqWCaOWsdXXUASIwoi8jqypjvdoFAy/view?usp=drive_link): ViT-L/16 model checkpoint trained on SegPANDA200 from above checkpoint (Test mIoU 70.7).
 
 # Citation
 Provisional
