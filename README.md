@@ -97,3 +97,20 @@ We also thank the authors of the following repositories for their contributions 
 - [PyTorch Image Models](https://github.com/huggingface/pytorch-image-models)
 
 This work is based on results obtained from a project, JPNP20006, commissioned by the New Energy and Industrial Technology Development Organization (NEDO). 
+
+# Citation
+If you use this work, datasets, and models, please cite the following paper:
+```bibtex
+@InProceedings{10.1007/978-3-031-44917-8_25,
+  author    = {Kawai, Masakata and Ota, Noriaki and Yamaoka, Shinsuke},
+  editor    = {Xue, Zhiyun and Antani, Sameer and Zamzmi, Ghada and Yang, Feng and Rajaraman, Sivaramakrishnan and Huang, Sharon Xiaolei and Linguraru, Marius George and Liang, Zhaohui},
+  title     = {Large-Scale Pretraining on Pathological Images for Fine-Tuning of Small Pathological Benchmarks},
+  booktitle = {Medical Image Learning with Limited and Noisy Data},
+  year      = {2023},
+  publisher = {Springer Nature Switzerland},
+  address   = {Cham},
+  pages     = {257--267},
+  isbn      = {978-3-031-44917-8}
+}
+```
+
